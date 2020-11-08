@@ -6,7 +6,7 @@ const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const app = express();
 const router = require('./routers/router')
-const db = require('./db')
+const http = require('http');
 
 app.use(bodyParser.json({
     limit: '50mb',
@@ -33,3 +33,6 @@ app.use(router)
 console.log("API Gateway run on localhost:3000")
 
 app.listen(3000);
+
+
+module.exports = app ;

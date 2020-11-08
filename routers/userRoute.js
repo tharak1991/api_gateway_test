@@ -3,7 +3,6 @@ var router = express.Router();
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-// const apiAdapter = require('./apiAdapter');
 const validateUser = require('../middleware/validateUser');
 
 const BASE_URL = 'http://localhost:3001'
@@ -53,6 +52,22 @@ router.get('/:id' , validateUser,  async (req, res) => {
 router.get('/all', validateUser, async(req, res) => {
   try {
     const path = req.path;
+    const apiURl = BASE_URL + path;
+
+    let resp = await axios.get(apiURl, req.body);
+
+    await res.status(201).json({
+      status: true,
+      user: resp.data
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+router.get('/unauth/all', validateUser, async(req, res) => {
+  try {
+    const path = '/user/all';
     const apiURl = BASE_URL + path;
 
     let resp = await axios.get(apiURl, req.body);
