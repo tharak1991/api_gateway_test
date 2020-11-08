@@ -3,11 +3,11 @@ var router = express.Router();
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const apiAdapter = require('./apiAdapter');
+// const apiAdapter = require('./apiAdapter');
 const validateUser = require('../middleware/validateUser');
 
 const BASE_URL = 'http://localhost:3001'
-const api = apiAdapter(BASE_URL)
+// const api = apiAdapter(BASE_URL)
 
 router.post('/', async (req, res) => {
   try {

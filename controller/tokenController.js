@@ -1,24 +1,38 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const { user_model } = require('../model/user');
+const user_model = require('../model/user');
 
-exports.verify = token => {
+exports.verify = (token) => {
     try {
-        jwt.verify(token, config.secret);
-        return true;
+        // console.log(1);
+        let decoded = jwt.verify(token, config.secret);
+        // console.log(2);
+        // return true ;
+        return {
+            isVerified : true ,
+            decoded: decoded
+        }
     } catch (e) {
-        return false;
+        console.error(e);
+        // return false;
+        //throw new error('invalid token')
+        return {
+            isVerified : false ,
+            error: e
+        }
     }
 };
 
-exports.getUser = async token => {
+exports.getUser = async id => {
     try {
-        let decoded = jwt.verify(token, config.secret);
-        console.log('decoded token', decoded);
-        let data = await user_model.findById(decoded.data);
+        // let decoded = jwt.verify(token, config.secret);
+        console.log('id', id);
+        let data = await user_model.findById(id);
+        console.log(data);
         delete data.password;
         return data;
     } catch (e) {
+        console.error(e);
         return false;
     }
 };

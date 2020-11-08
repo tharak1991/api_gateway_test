@@ -15,16 +15,19 @@ function sendUnauthenticatedResponse(res) {
 
 
 module.exports = async (req, res, next) => {
-    if (!req.headers.Authorization || !req.headers.Authorization.startsWith('Bearer ')) {
+    if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
         res.status(403).send('Unauthorized');
         return;
     }
-    const token = req.headers.Authorization.split('Bearer ')[1];
+    const token = req.headers.authorization.split('Bearer ')[1];
+
+    console.log('t', token);
 
     try {
-        let isTokenValid = token_controller.verify(getToken(token));
-    if (isTokenValid) {
-        let user_info = await token_controller.getUser(token);
+        let token_resp =   token_controller.verify(token);
+        console.log('token_resp', token_resp);
+    if (token_resp.isVerified) {
+        let user_info = await token_controller.getUser(token_resp.decoded.id);
         if (user_info) {
             req.body = {...req.body, user_info};
             next();
