@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 const apiAdapter = require('./apiAdapter');
 const validateUser = require('../middleware/validateUser');
 
@@ -15,10 +17,18 @@ router.post('/', async (req, res) => {
 
     let resp = await axios.post(apiURl, req.body);
 
-    await res.status(201).json({
-      status: true,
-      user: resp.data
-    });
+    if( resp.data.status){      
+      const token = jwt.sign({ id: resp.data.user_id }, config.secret, { expiresIn: config.expiry });
+      await res.status(201).json({
+        status: true,
+        jwt: {
+          token: token,
+          expiry: config.expiry
+        }
+      });
+    }
+
+   
   } catch (error) {
     console.error(error);
   }
